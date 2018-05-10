@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
+
+	<!-- 서버가 실행될 때 필요한 파일들의 경로 -->
+	<!-- 1. dependency(의존성주입) 예제 -->
+	<!-- <bean class="polymorphism.SamsungTV" p:speaker-ref="sony" p:price="270000" init-method="initMethod" destroy-method="destroyMethod" scope="singleton"> -주석) id는 생략 가능여 클래스 이름의 제일 첫자를 소문자로 자동 변경되어 ID를 생성한다.
+		<constructor-arg index="0" ref="apple"></constructor-arg> -주석)index: 몇 번째 매개변수로 매핑되는지 지정	
+		<constructor-arg index="1" value="330000"/> 
+		<property name="speaker" ref="apple"/>
+		 <property name="price" value="330000"/>
+	</bean>
+	
+	<bean id="sony" class="polymorphism.SonySpeaker"/>
+	<bean id="apple" class="polymorphism.AppleSpeaker"/>
+	
+	-주석) 2. Collection 예제(List)
+	<bean id="collectionBean" class="com.springbook.ioc.injection.CollectionBean">
+		<property name="addressList">
+			<list>
+				<value>서울시 강남구 역삼동</value>
+				<value>서울시 관악구 신림동</value>
+			</list>
+		</property>
+	</bean> -->
+	
+	<!-- 3. 어노테이션을 사용한 예제(어노테이션과 XML을 혼합하여 사용)
+	<beans>
+		<context:component-scan base-package="polymorphism"></context:component-scan>
+		<bean class="polymorphism.SonySpeaker"></bean>
+	</beans> -->
+	
+	<!-- 4. day1 실습1
+	<context:component-scan base-package="com.springbook.biz"></context:component-scan> -->
+	
+	<!-- 5. day1 실습2 -->
+	<!--
+	<context:component-scan base-package="com.springbook.biz"></context:component-scan>
+	
+	 <bean id="userService" class="com.springbook.biz.user.impl.UserServiceImpl">
+		<property name="userDAO" ref="userDAO"/>
+	</bean>
+	
+	<bean id="userDAO" class="com.springbook.biz.user.impl.UserDAO"/> -->
+	
+	<!-- 6. AOP 시작 -->
+	<!-- <context:component-scan base-package="com.springbook.biz"></context:component-scan>
+	
+	<bean id="log" class="com.springbook.biz.common.LogAdvice"></bean>
+	<bean id="before" class="com.springbook.biz.common.BeforeAdvice"/>
+	<bean id="afterReturning" class="com.springbook.biz.common.AfterReturningAdvice"/>
+	<bean id="afterThrowing" class="com.springbook.biz.common.AfterThrowingAdvice"/>
+	<bean id="after" class="com.springbook.biz.common.AfterAdvice"/>
+	<bean id="around" class="com.springbook.biz.common.AroundAdvice"/>
+	
+	<aop:config>
+		<aop:pointcut id ="allPointcut" expression="execution(* com.springbook.biz..*Impl.*(..))"/>
+		<aop:pointcut id="getPointcut" expression="execution(* com.springbook.biz..*Impl.get*(..))"/>
+		
+		<aop:aspect ref="before">
+			<aop:before pointcut-ref="allPointcut" method="beforeLog"/>
+		</aop:aspect>
+		
+		<aop:aspect ref="afterReturning">
+			<aop:after-returning pointcut-ref="getPointcut" method="afterLog" returning="returnObj"/>
+		</aop:aspect>
+		
+		<aop:aspect ref="afterThrowing">
+			<aop:after-throwing pointcut-ref="allPointcut" method="exceptionLog" throwing="exceptObj"/>
+		</aop:aspect>
+		
+		<aop:aspect ref="log">
+			<aop:after pointcut-ref="allPointcut" method="printLog"/>
+		</aop:aspect>
+		
+		<aop:aspect ref="around">
+			<aop:around pointcut-ref="allPointcut" method="aroundLog"/>
+		</aop:aspect>
+		
+		<aop:aspect ref="after">
+			<aop:after pointcut-ref="allPointcut" method="finallyLog"/>
+		</aop:aspect>
+		
+	</aop:config> -->
+	
+	<!-- 7. AOP 어노테이션 사용. -->
+	<context:property-placeholder location="classpath:config/database.properties" />
+	<context:component-scan base-package="com.springbook.biz"></context:component-scan>
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	
+	<!-- 8. DataSource 설정 (DBCP) -->
+	
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+	
+</beans>
